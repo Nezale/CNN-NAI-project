@@ -72,11 +72,10 @@ network.fit_generator(training_set,
                          callbacks = [tensorboard])
 
 #Saving model
-path = ('kitty_and_dogo.h5')
+path = ('dogs_and_cats.h5')
 network.save(path)
 del network
 network = load_model(path)
-
 
 #SinglePrediction
 

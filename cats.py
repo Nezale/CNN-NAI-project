@@ -9,6 +9,9 @@ from keras.models import load_model
 from keras.callbacks import TensorBoard
 from time import time
 import keras.backend as K
+#import pygame
+#import pygame.camera
+#from pygame.locals import *
 
 config = K.tf.ConfigProto()
 config.gpu_options.allow_growth = True
@@ -57,20 +60,20 @@ train_datagen = ImageDataGenerator(rescale = 1./255,
 
 test_datagen = ImageDataGenerator(rescale = 1./255)
 
-training_set = train_datagen.flow_from_directory('dataset/training_set',
+training_set = train_datagen.flow_from_directory('datasetcat/training_set',
                                                  target_size = (64, 64),
                                                  batch_size = 32,
                                                  class_mode = 'binary')
 
-test_set = test_datagen.flow_from_directory('dataset/test_set',
+test_set = test_datagen.flow_from_directory('datasetcat/test_set',
                                             target_size = (64, 64),
                                             batch_size = 32,
                                             class_mode = 'binary')
 network.fit_generator(training_set,
                          steps_per_epoch = 4000,
-                         epochs = 10,
+                         epochs = 25,
                          validation_data = test_set,
-                         validation_steps = 2000,
+                         validation_steps = 1000,
                          callbacks=[tensorboard])
 
 #Saving model
@@ -79,12 +82,23 @@ network.save(path)
 del network
 network = load_model(path)
 
+#pygame.init()
+#pygame.camera.init()
+#pygame.camera.list_cameras
+#cam = pygame.camera.Camera("/dev/video0",(640,480))
+#cam.start()
+#image = cam.get_image()
+#pygame.image.save(image,"test.jpg")
+
+#camlist = pygame.camera.list_cameras()
+#if camlist:
+#    cam = pygame.caemra.Camera(camlist[0],(640,480))
 
 #SinglePrediction
 
 import numpy as np
 from keras.preprocessing import image
-test_image = image.load_img('dataset/single_prediction/cat_or_dog_1.jpg', target_size = (64, 64))
+test_image = image.load_img('dataset/single_prediction/cat_or_dog_2.jpg', target_size = (64, 64))
 test_image = image.img_to_array(test_image)
 test_image = np.expand_dims(test_image, axis = 0)
 result = network.predict(test_image)
@@ -94,7 +108,4 @@ if result[0][0] == 0:
 else:
     prediction = 'unknown object'
     
-predicted_classes = network.decode_predictions(prediction, top=1)
-imagenet_id, name, confidence = predicted_classes[0][0]
-print("This is a {} with {:.4}% confidence!".format(name, confidence * 100))
     
