@@ -5,7 +5,7 @@ from keras.preprocessing import image
 
 dogs = load_model('dogs.h5')
 cats = load_model('cats.h5')
-both = load_model('dogs_and_cats.h5')
+single = load_model('dogs_and_cats.h5')
 
 from keras.preprocessing.image import ImageDataGenerator
 
@@ -25,21 +25,23 @@ test_image = image.img_to_array(test_image)
 test_image = np.expand_dims(test_image, axis = 0)
 result = cats.predict(test_image)
 #training_set.class_indices
-if result[0][0] == 0:
-    prediction_cats = 'cat'
-else:
-    prediction_cats = 'unknown object'
+#if result[0][0] == 0:
+#    prediction_cats = 'cat'
+#else:
+ #   prediction_cats = 'unknown object'
 
 result2 = dogs.predict(test_image)
 #training_set.class_indices
-if result2[0][0] == 0:
-    prediction_dogs = 'cat'
+if result2[0][0] == 1 and result[0][0] == 0:
+    prediction_both = 'cat'
+elif result2[0][0] == 0 and result[0][0] == 1:
+    prediction_both = 'dog'
 else:
-    prediction_dogs = 'unknown object'
+    prediction_both ='unknown object'
     
-result3 = both.predict(test_image)
+result3 = single.predict(test_image)
 training_set.class_indices
 if result3[0][1] == 0:
-    prediction_both = 'cat'
+    prediction_single = 'cat'
 else:
-    prediction_both = 'dog'
+    prediction_single = 'dog'
